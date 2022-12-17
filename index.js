@@ -1,6 +1,7 @@
 import os from 'os'
 import { Utils } from './src/common/utils/utils.js'
 import { Nwd } from './src/nwd/nwd.js'
+import { Files } from './src/files/files.js'
 import { ErrorMessages } from './src/common/constants/errorMessages.js'
 
 class App {
@@ -10,6 +11,7 @@ class App {
 
     constructor() {
         this.nwd = new Nwd()
+        this.files = new Files()
     }
 
     start() {
@@ -58,6 +60,24 @@ class App {
                     break
                 case 'ls':
                     return await this.nwd.ls(this.#currentDir)
+                case 'cat':
+                    if (!args[0]) return ErrorMessages.INVALID_INPUT
+                    return await this.files.cat(this.#currentDir, args[0])
+                case 'add':
+                    if (!args[0]) return ErrorMessages.INVALID_INPUT
+                    return await this.files.add(this.#currentDir, args[0])
+                case 'rn':
+                    if (!args[0] || !args[1]) return ErrorMessages.INVALID_INPUT
+                    return await this.files.rn(this.#currentDir, args[0], args[1])
+                case 'cp':
+                    if (!args[0] || !args[1]) return ErrorMessages.INVALID_INPUT
+                    return await this.files.cp(this.#currentDir, args[0], args[1])
+                case 'mv':
+                    if (!args[0] || !args[1]) return ErrorMessages.INVALID_INPUT
+                    return await this.files.mv(this.#currentDir, args[0], args[1])
+                case 'rm':
+                    if (!args[0]) return ErrorMessages.INVALID_INPUT
+                    return await this.files.rm(this.#currentDir, args[0])
                 default:
                     return ErrorMessages.INVALID_INPUT
             }
