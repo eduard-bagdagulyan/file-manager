@@ -3,6 +3,7 @@ import { Utils } from './src/common/utils/utils.js'
 import { Nwd } from './src/nwd/nwd.js'
 import { Files } from './src/files/files.js'
 import { Os } from './src/os/os.js'
+import { Hash } from './src/hash/hash.js'
 import { ErrorMessages } from './src/common/constants/errorMessages.js'
 
 class App {
@@ -14,6 +15,7 @@ class App {
         this.nwd = new Nwd()
         this.files = new Files()
         this.os = new Os()
+        this.hash = new Hash()
     }
 
     start() {
@@ -83,6 +85,9 @@ class App {
                 case 'os':
                     if (!args[0]) return ErrorMessages.INVALID_INPUT
                     return await this.os.getInfo(args[0])
+                case 'hash':
+                    if (!args[0]) return ErrorMessages.INVALID_INPUT
+                    return await this.hash.calcHash(this.#currentDir, args[0])
                 default:
                     return ErrorMessages.INVALID_INPUT
             }
