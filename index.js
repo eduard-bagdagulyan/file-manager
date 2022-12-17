@@ -42,35 +42,27 @@ class App {
     async handleData(data) {
         const [command, ...args] = data.trim().split(' ')
 
-        switch (command) {
-            case '':
-                break
-            case '.exit':
-                process.exit(0)
-                break
-            case 'up':
-                try {
+        try {
+            switch (command) {
+                case '':
+                    break
+                case '.exit':
+                    process.exit(0)
+                    break
+                case 'up':
                     this.#currentDir = this.nwd.up(this.#currentDir)
                     break
-                } catch (e) {
-                    return ErrorMessages.OPERATION_FAILED
-                }
-            case 'cd':
-                try {
+                case 'cd':
                     if (!args[0]) return ErrorMessages.INVALID_INPUT
                     this.#currentDir = await this.nwd.cd(this.#currentDir, args[0])
                     break
-                } catch (e) {
-                    return ErrorMessages.OPERATION_FAILED
-                }
-            case 'ls':
-                try {
+                case 'ls':
                     return await this.nwd.ls(this.#currentDir)
-                } catch (e) {
-                    return ErrorMessages.OPERATION_FAILED
-                }
-            default:
-                return ErrorMessages.INVALID_INPUT
+                default:
+                    return ErrorMessages.INVALID_INPUT
+            }
+        } catch (e) {
+            return ErrorMessages.OPERATION_FAILED
         }
     }
 }
