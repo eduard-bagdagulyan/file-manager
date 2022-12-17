@@ -1,11 +1,11 @@
 import os from 'os'
-import { parseArgs } from './src/common/utils/utils.js'
+import { Utils } from './src/common/utils/utils.js'
 import { Nwd } from './src/nwd/nwd.js'
 import { ErrorMessages } from './src/common/constants/errorMessages.js'
 
 class App {
     #currentDir = os.homedir()
-    #startArgs = parseArgs()
+    #startArgs = Utils.parseArgs()
     #username = this.#startArgs.username
 
     constructor() {
@@ -16,7 +16,7 @@ class App {
         if (this.#username !== undefined) {
             console.log(`Welcome to the File Manager, ${this.#username}!`)
             process.stdin.resume().setEncoding('utf8')
-            process.stdout.setEncoding('utf8').write(`${this.getCurrentDirMessage()}`)
+            process.stdout.setEncoding('utf8').write(`${Utils.getCurrentDirMessage(this.#currentDir)}`)
         } else {
             throw new Error(ErrorMessages.MISSING_USERNAME)
         }
@@ -24,7 +24,7 @@ class App {
 
     setupEvents() {
         process.on('SIGINT', () => process.exit(0))
-        process.on('exit', () => console.log(this.getExitMessage()))
+        process.on('exit', () => console.log(Utils.getExitMessage(this.#username)))
         process.stdin.on('data', data => {
             this.handleData(data).then(result => {
                 if (result && typeof result === 'string') {
@@ -32,7 +32,7 @@ class App {
                 } else if (result && typeof result === 'object') {
                     console.table(result)
                 }
-                process.stdout.write(`${this.getCurrentDirMessage()}`)
+                process.stdout.write(`${Utils.getCurrentDirMessage(this.#currentDir)}`)
             })
         })
 
@@ -65,21 +65,13 @@ class App {
                 }
             case 'ls':
                 try {
-                    return this.nwd.ls(this.#currentDir)
+                    return await this.nwd.ls(this.#currentDir)
                 } catch (e) {
                     return ErrorMessages.OPERATION_FAILED
                 }
             default:
                 return ErrorMessages.INVALID_INPUT
         }
-    }
-
-    getCurrentDirMessage() {
-        return `You are currently in ${this.#currentDir}: `
-    }
-
-    getExitMessage() {
-        return `\nThank you for using File Manager, ${this.#username}, goodbye!`
     }
 }
 
