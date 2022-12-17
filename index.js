@@ -2,6 +2,7 @@ import os from 'os'
 import { Utils } from './src/common/utils/utils.js'
 import { Nwd } from './src/nwd/nwd.js'
 import { Files } from './src/files/files.js'
+import { Os } from './src/os/os.js'
 import { ErrorMessages } from './src/common/constants/errorMessages.js'
 
 class App {
@@ -12,6 +13,7 @@ class App {
     constructor() {
         this.nwd = new Nwd()
         this.files = new Files()
+        this.os = new Os()
     }
 
     start() {
@@ -78,6 +80,9 @@ class App {
                 case 'rm':
                     if (!args[0]) return ErrorMessages.INVALID_INPUT
                     return await this.files.rm(this.#currentDir, args[0])
+                case 'os':
+                    if (!args[0]) return ErrorMessages.INVALID_INPUT
+                    return await this.os.getInfo(args[0])
                 default:
                     return ErrorMessages.INVALID_INPUT
             }
