@@ -4,6 +4,7 @@ import { Nwd } from './src/nwd/nwd.js'
 import { Files } from './src/files/files.js'
 import { Os } from './src/os/os.js'
 import { Hash } from './src/hash/hash.js'
+import { Archiver } from './src/archiver/archiver.js'
 import { ErrorMessages } from './src/common/constants/errorMessages.js'
 
 class App {
@@ -16,6 +17,7 @@ class App {
         this.files = new Files()
         this.os = new Os()
         this.hash = new Hash()
+        this.archiver = new Archiver()
     }
 
     start() {
@@ -88,6 +90,12 @@ class App {
                 case 'hash':
                     if (!args[0]) return ErrorMessages.INVALID_INPUT
                     return await this.hash.calcHash(this.#currentDir, args[0])
+                case 'compress':
+                    if (!args[0] || !args[1]) return ErrorMessages.INVALID_INPUT
+                    return await this.archiver.compress(this.#currentDir, args[0], args[1])
+                case 'decompress':
+                    if (!args[0] || !args[1]) return ErrorMessages.INVALID_INPUT
+                    return await this.archiver.decompress(this.#currentDir, args[0], args[1])
                 default:
                     return ErrorMessages.INVALID_INPUT
             }
