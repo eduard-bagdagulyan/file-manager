@@ -29,7 +29,7 @@ export class Files {
     async cp(currentDir, fileName, directory) {
         const filePath = path.resolve(currentDir, fileName)
         const directoryPath = path.resolve(currentDir, directory)
-        const destination = path.resolve(directoryPath, fileName)
+        const destination = path.resolve(directoryPath, path.basename(filePath))
 
         const directoryStats = await fs.stat(directoryPath)
         const fileStats = await fs.stat(filePath)
@@ -47,7 +47,7 @@ export class Files {
 
     async mv(currentDir, fileName, directory) {
         const filePath = path.resolve(currentDir, fileName)
-        const destination = path.resolve(directory, fileName)
+        const destination = path.resolve(directory, path.basename(filePath))
 
         if (filePath === destination) {
             return
